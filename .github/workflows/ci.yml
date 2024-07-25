@@ -16,18 +16,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
-        lfs: true  # Ensure Git LFS files are fetched
+        lfs: true
 
-    - name: Install Git LFS
-      run: |
-        git lfs install
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
 
     - name: Install prerequisites
       run: |
         sudo apt-get update
         sudo apt-get install -y clang-10
         sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-10 100
-        sudo apt-get install -y build-essential
 
     - name: Install Unreal Engine
       run: |
@@ -40,14 +40,9 @@ jobs:
     - name: Build Unreal Project
       run: |
         cd /path/to/your/UnrealProject
-        /path/to/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun \
-          -project="C:\Users\aryan\Downloads\TimeAttackRacer\Time-Attact-Racer\TimeAttackRacer2.uproject" \
-          -noP4 -platform=Linux -clientconfig=Development -serverconfig=Development \
-          -cook -build -stage -pak -archive \
-          -archivedirectory=/path/to/your/UnrealProject/Saved/StagedBuilds/LinuxNoEditor
 
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Build-Output
-        path: /path/to/your/UnrealProject/Saved/StagedBuilds/LinuxNoEditor  # Adjust output path as needed
+   - name: Upload Build Artifacts
+     uses: actions/upload-artifact@v2
+     with:
+       name: build
+       path: /path/to/output/directory
