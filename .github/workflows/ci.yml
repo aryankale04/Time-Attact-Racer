@@ -41,7 +41,7 @@ jobs:
       run: |
         cd /path/to/your/UnrealProject
         /path/to/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun \
-          -project=/path/to/your/UnrealProject/YourProject.uproject \
+          -project="C:\Users\aryan\Downloads\TimeAttackRacer\Time-Attact-Racer\TimeAttackRacer2.uproject" \
           -noP4 -platform=Linux -clientconfig=Development -serverconfig=Development \
           -cook -build -stage -pak -archive \
           -archivedirectory=/path/to/your/UnrealProject/Saved/StagedBuilds/LinuxNoEditor
