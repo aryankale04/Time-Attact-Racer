@@ -1,49 +1,37 @@
-name: Unreal Engine CI
+name: Node.js CI
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
-        lfs: true
+        node-version: '14'
 
-    - name: Install prerequisites
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-10
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-10 100
-        sudo apt-get install -y build-essential
+    - name: Install dependencies
+      run: npm install
 
-    - name: Install Unreal Engine
-      run: |
-        git clone --depth=1 -b 4.26 https://github.com/EpicGames/UnrealEngine.git
-        cd UnrealEngine
-        ./Setup.sh
-        ./GenerateProjectFiles.sh
-        make
+    - name: Run tests
+      run: npm test
 
-    - name: Build Unreal Project
-      run: |
-        cd /path/to/your/UnrealProject
-        /path/to/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun \
-          -project=/path/to/your/UnrealProject/YourProject.uproject \
-          -noP4 -platform=Linux -clientconfig=Development -serverconfig=Development \
-          -cook -build -stage -pak -archive \
-          -archivedirectory=/path/to/your/UnrealProject/Saved/StagedBuilds/LinuxNoEditor
+    - name: Build application
+      run: npm run build
 
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
       with:
-        name: Build-Output
-        path: /path/to/your/UnrealProject/Saved/StagedBuilds/LinuxNoEditor  # Adjust output path as needed
+        name: build-artifacts
+        path: ./build
